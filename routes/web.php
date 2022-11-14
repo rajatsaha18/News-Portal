@@ -7,6 +7,7 @@ use App\Http\Controllers\admin\CategoryController;
 use App\Http\Controllers\admin\SubCategoryController;
 use App\Http\Controllers\admin\NewsController;
 use App\Http\Controllers\website\AuthController;
+use App\Http\Controllers\website\CustomerAuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,15 +25,25 @@ Route::get('/category-news/{id}', [HomeController::class, 'category'])->name('ca
 Route::get('/sub-category-news/{id}', [HomeController::class, 'subCategory'])->name('subcategory');
 Route::get('/news-detail/{id}', [HomeController::class, 'detail'])->name('detail');
 
-Route::get('/login', [AuthController::class, 'index'])->name('login');
-Route::post('/post-login', [AuthController::class, 'postLogin'])->name('login.post');
-Route::get('/registration', [AuthController::class, 'registration'])->name('register');
-Route::post('/post-registration', [AuthController::class, 'postRegistration'])->name('register.post');
-Route::get('/user-dashboard', [AuthController::class, 'dashboard']);
-Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::middleware(['alreadyLoggedIn'])->group(function (){
+    Route::get('/customer-login', [CustomerAuthController::class, 'login'])->name('login-customer');
+    Route::get('/customer-registration', [CustomerAuthController::class, 'registration'])->name('registration-customer');
+});
+Route::post('/register-user', [CustomerAuthController::class, 'registerUser'])->name('register-user');
+Route::post('/login-user', [CustomerAuthController::class, 'loginUser'])->name('login-user');
+Route::get('/customer-dashboard', [CustomerAuthController::class, 'customerDashboard'])->name('customer-dashboard')->middleware('isLoggedIn');
+Route::get('/customer-logout', [CustomerAuthController::class, 'customerLogout'])->name('customer-logout');
+
+
+//Route::get('/login', [AuthController::class, 'index'])->name('login');
+//Route::post('/post-login', [AuthController::class, 'postLogin'])->name('login.post');
+//Route::get('/registration', [AuthController::class, 'registration'])->name('register');
+//Route::post('/post-registration', [AuthController::class, 'postRegistration'])->name('register.post');
+//Route::get('/user-dashboard', [AuthController::class, 'dashboard']);
+//Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {
-    Route::get('/admin-dashboard', [DashboardController::class,'index'])->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class,'index'])->name('dashboard');
 
     Route::get('/add-category', [CategoryController::class,'index'])->name('category.index');
     Route::post('/new-category', [CategoryController::class,'create'])->name('category.new');

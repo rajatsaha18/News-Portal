@@ -7,6 +7,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <!-- Favicon -->
     <link rel="shortcut icon" href="{{asset('/')}}website/assets/images/fev-icon.png" />
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
@@ -167,18 +168,20 @@
                 <div class="col-sm-4 col-md-3">
                     <div class="top_header_menu_wrap">
                         <ul class="top-header-menu">
-                            @guest
+                            @if(Session::get('loginId'))
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('login') }}">Login</a>
+                                    <a class="nav-link" href="{{ route('customer-logout') }}">Logout</a>
                                 </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">Register</a>
-                                </li>
+
                             @else
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('logout') }}">Logout</a>
+                                    <a class="nav-link" href="{{ route('login-customer') }}">Login</a>
                                 </li>
-                            @endguest
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('registration-customer') }}">Register</a>
+                                </li>
+
+                            @endif
                         </ul>
                     </div>
                 </div>
@@ -460,6 +463,7 @@
 <script type="text/javascript" src="{{asset('/')}}website/assets/js/form-classie.js"></script>
 <!-- custom js -->
 <script type="text/javascript" src="{{asset('/')}}website/assets/js/custom.js"></script>
+
 </body>
 
 
